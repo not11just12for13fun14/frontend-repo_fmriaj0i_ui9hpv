@@ -1,71 +1,45 @@
+import { useRef, useState } from 'react'
+import Header from './components/Header'
+import Shop from './components/Shop'
+import Checkout from './components/Checkout'
+
 function App() {
+  const shopRef = useRef(null)
+  const [checkout, setCheckout] = useState({ open: false, items: [], total: 0 })
+
+  const scrollToShop = () => {
+    document.getElementById('boutique')?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  const openCheckout = (items, total) => setCheckout({ open: true, items, total })
+  const closeCheckout = () => setCheckout({ open: false, items: [], total: 0 })
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      {/* Subtle pattern overlay */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.05),transparent_50%)]"></div>
-
-      <div className="relative min-h-screen flex items-center justify-center p-8">
-        <div className="max-w-2xl w-full">
-          {/* Header with Flames icon */}
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center mb-6">
-              <img
-                src="/flame-icon.svg"
-                alt="Flames"
-                className="w-24 h-24 drop-shadow-[0_0_25px_rgba(59,130,246,0.5)]"
-              />
-            </div>
-
-            <h1 className="text-5xl font-bold text-white mb-4 tracking-tight">
-              Flames Blue
-            </h1>
-
-            <p className="text-xl text-blue-200 mb-6">
-              Build applications through conversation
-            </p>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.06),transparent_50%)]" />
+      <div className="relative">
+        <Header onShopClick={scrollToShop} />
+        <div id="infos" className="mx-auto max-w-7xl px-6 py-10 grid gap-6 lg:grid-cols-3">
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-blue-100">
+            <h3 className="text-white font-bold text-lg">Confort supérieur</h3>
+            <p className="mt-2 text-sm">Matériaux respirants, bords rembourrés et ajustements 4 points pour un maintien parfait.</p>
           </div>
-
-          {/* Instructions */}
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-blue-500/20 rounded-2xl p-8 shadow-xl mb-6">
-            <div className="flex items-start gap-4 mb-6">
-              <div className="flex-shrink-0 w-8 h-8 bg-blue-500 text-white rounded-lg flex items-center justify-center font-bold">
-                1
-              </div>
-              <div>
-                <h3 className="font-semibold text-white mb-1">Describe your idea</h3>
-                <p className="text-blue-200/80 text-sm">Use the chat panel on the left to tell the AI what you want to build</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4 mb-6">
-              <div className="flex-shrink-0 w-8 h-8 bg-blue-500 text-white rounded-lg flex items-center justify-center font-bold">
-                2
-              </div>
-              <div>
-                <h3 className="font-semibold text-white mb-1">Watch it build</h3>
-                <p className="text-blue-200/80 text-sm">Your app will appear in this preview as the AI generates the code</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-blue-500 text-white rounded-lg flex items-center justify-center font-bold">
-                3
-              </div>
-              <div>
-                <h3 className="font-semibold text-white mb-1">Refine and iterate</h3>
-                <p className="text-blue-200/80 text-sm">Continue the conversation to add features and make changes</p>
-              </div>
-            </div>
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-blue-100">
+            <h3 className="text-white font-bold text-lg">Sécurité renforcée</h3>
+            <p className="mt-2 text-sm">Boucles robustes, anneau en métal et bandes réfléchissantes pour vos sorties nocturnes.</p>
           </div>
-
-          {/* Footer */}
-          <div className="text-center">
-            <p className="text-sm text-blue-300/60">
-              No coding required • Just describe what you want
-            </p>
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-blue-100">
+            <h3 className="text-white font-bold text-lg">Design stylé</h3>
+            <p className="mt-2 text-sm">Couleurs modernes et coupes ergonomiques, pour un look au top sans compromettre le confort.</p>
           </div>
         </div>
+
+        <Shop ref={shopRef} onCheckout={openCheckout} />
       </div>
+
+      {checkout.open && (
+        <Checkout items={checkout.items} total={checkout.total} onClose={closeCheckout} />
+      )}
     </div>
   )
 }
